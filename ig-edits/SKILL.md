@@ -139,3 +139,17 @@ Hand-filmed screens move, so a static blur box leaks. Use `blur_track.py`: per s
 ## 14. Covers made programmatically
 
 Edits caches its remote fonts on disk (`~/Library/Containers/com.burbn.basel.mac/Data/Library/Caches/com.burbn.basel.mac.ig_remote_assets_disk_cache/`, hashed file names; identify them with PIL `ImageFont.truetype(f).getname()`). Copy the one your title uses so a Pillow/HTML cover matches the video's title type exactly. Cut the subject out of an HD photo (`npx hyperframes remove-background in.png -o out.png`), keep the title and face inside the 3:4 profile-grid crop (y 240-1680 of 1920), and measure stacked-text gaps the same way as section 4. Colour emoji in Pillow: Apple Color Emoji at size 160 with `embedded_color=True`, then scale.
+
+## 15. Defaults that work for talking-head reels
+
+- **Captions: one preset for the whole video.** `generateCaptions` + one `setCaptionStyle`, one text colour, fix misheard words with `editCaption`. Don't build captions as per-word text elements or colour individual keywords: hundreds of elements, slow to restyle, and the extra colours rarely help.
+- **Title only for the first 10-15 seconds.** Show the title through the hook, then end it (at a sentence break, or where a card or cutaway takes the top of the frame). A title left on for the whole reel is distracting.
+- **Pick music by vibe, not by keyword.** Turn the description ("new beginnings, exciting", "news-y") into a sound brief: feeling, energy/tempo, how it builds, texture, instrumental or not. Then pick well-known tracks that sound like that and search the library by artist + title. Searching the description words returns songs with that TITLE, not that feel. Under a voice, prefer instrumental or mostly-instrumental tracks.
+- **Volume levels that sit under a voice:**
+  | Layer | Setting |
+  |---|---|
+  | Music bed | `setSound(volumeDb=-23)` as a start, down to about -31 dB if it still competes; `setDucking(behavior='video', level=0.5)`; fade in 0.3s, out 1-2s |
+  | Whoosh / riser | `setVolume` about 0.3 (full volume is too loud) |
+  | Click / pop | about 0.5 |
+  | Shimmer / sparkle | about 0.35 |
+  | Speech clips | `setSound(reduceNoise=60)`, each take levelled to the same loudness (section 10) |
