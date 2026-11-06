@@ -114,7 +114,7 @@ def frames(start, path_prefix, count=1, duration=0.1, width=540):
 
 
 def element_start(eid):
-    for x in call('elements', fields=['id', 'startTime', 'endTime'])['elements']:
+    for x in call('elements', fields=['id', 'startTime', 'endTime'], limit=5000)['elements']:
         if x['id'] == eid:
             return x['startTime'], x['endTime']
 

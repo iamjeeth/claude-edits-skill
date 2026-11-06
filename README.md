@@ -19,11 +19,13 @@ Instagram Edits for Mac (bundle `com.burbn.basel.mac`) ships a local automation 
 
 - **Overlays and cards** at exact timestamps, with scale-pop entrances
 - **Sound effects** placed on the beat, volume set per clip
-- **Text titles** measured once and built once (box, lines, subtitle bar)
-- **Auto captions** and caption styling
+- **Text titles** as one element styled through the Text panel, with measured, even spacing between stacked lines
+- **Auto captions** with one style preset for the whole video
 - **Word-level transcripts** (like WhisperX) and silence jump cuts
 - **Preview frames** so Claude checks its own edit before you look
 - **Export** settings that actually work (SDR, 1080x1920, HEVC)
+- **Hide API keys and tokens** in hand-filmed screen recordings (tracked blur) and verify every frame
+- **Post** through the Edits share sheet: trial reel, location and cover
 - A **click fallback** with computer use for when the server is off
 
 ## How to connect Claude to Instagram Edits
@@ -59,11 +61,15 @@ cd ~/.claude/skills/ig-edits && python3 -c "import edits_client as e; e.init(); 
 | [`ig-edits/TOOLS.md`](ig-edits/TOOLS.md) | All 274 Instagram Edits automation tools with arguments, grouped by category |
 | [`ig-edits/edits_client.py`](ig-edits/edits_client.py) | Python MCP client with helpers: `place_overlay`, `place_sfx`, `add_text`, `frames`, `wait_export` |
 | [`ig-edits/render_cards_template.py`](ig-edits/render_cards_template.py) | Render HTML cards to transparent 1080x1920 PNGs for video overlays |
+| [`ig-edits/spacing.py`](ig-edits/spacing.py) | Measure stacked text in a rendered frame and equalise the vertical gaps |
+| [`ig-edits/blur_track.py`](ig-edits/blur_track.py) | Pixelate secrets that move with a hand-filmed screen (ORB + homography tracking) |
+| [`ig-edits/verify_blur.py`](ig-edits/verify_blur.py) | Check every frame of the blurred clip for the secret with template matching |
 
 ## Limits of the Edits automation server
 
 - Edits only reads files inside its sandbox (`~/Library/Containers/com.burbn.basel.mac/Data/tmp/`). The client's `stage()` copies assets there.
-- No posting, trial reels or scheduling to Instagram through the server.
+- No posting, trial reels or scheduling to Instagram through the server (the UI share sheet can post, see SKILL.md).
+- Licensed music is capped at 60 seconds on export/share; longer videos lose it unless the song is trimmed.
 - No opacity or blur keyframes, no text line height, no single box behind multi-line text.
 - Export needs `resolutionType`, `aspectRatio` and `quality` set together, or it silently never starts.
 
@@ -76,7 +82,7 @@ Not a public one. The Mac app has a local MCP automation server (Settings > Auto
 Yes. With this skill, Claude Code drives Instagram Edits on your Mac: footage, overlays, sound effects, text, captions and export.
 
 **Can Claude post or schedule reels from Edits?**
-No. The automation server has no post, trial reel or schedule tool. Export the video and post with the Instagram Graph API or the app.
+Not through the automation server. The Edits share sheet (Export > Share to Instagram) can post, including as a trial reel with a location and a custom cover; there is no scheduling. SKILL.md has the steps.
 
 **Does it work with other AI agents?**
 Any MCP client can connect to the server. The skill format is written for Claude Code; `edits_client.py` works from any Python script.
